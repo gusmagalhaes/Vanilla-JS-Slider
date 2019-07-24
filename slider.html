@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>GETTING STARTED WITH BRACKETS</title>
+        <meta name="description" content="An interactive getting started guide for Brackets.">
+			  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    </head>
+	<style>
+
+	</style>
+<body>
+ <style>
+	
+	body, h1, p {
+		margin: 0;
+		padding: 0;
+		background-color: #333;
+		font-family: 'Montserrat', sans-serif;
+	}
+	 main {
+		 height: 100vh;
+		 width: 100vw;
+		 display: flex;
+		 justify-content: center;
+
+	 }
+	 .slide-container {
+		 position: relative;
+		 width: 80%;
+		 height: 50%;
+	 }
+	 
+	.slide {
+		position: absolute;
+		left: -100vw;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		background-color: #333;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: .9s;
+		transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+	}
+	div.slide.active {
+      position: absolute;
+      left: 0;
+    } 
+	 
+	#slide-1 {
+      background-color: blue;
+	}
+	#slide-2 {
+      background-color: red;
+	}
+	#slide-3 {
+	  background-color: gray;
+	}
+	#slide-4 {
+	  background-color: green;
+	}
+
+	#slide-controller li {
+		display: flex;
+		align-items: center;
+		list-style: none;
+		cursor: pointer;
+	}
+	 #slide-controller li:nth-child(2).active div,
+	 #slide-controller li:nth-child(3).active div{
+		 width: 75px;
+	 }
+    #slide-controller li div {
+      margin:  0 0.3rem;
+      -webkit-transition: all 0.4s;
+      -moz-transition: all 0.4s;
+      -ms-transition: all 0.4s;
+      -o-transition: all 0.4s;
+      transition: all 0.4s;
+      width: 0;
+      transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+    #slide-controller li.active div{
+		height: 1px;
+		background-color: #fff;
+		width: 150px;
+	}
+
+	ul#slide-controller {
+		display: flex;
+		position: absolute;
+		top: 110%;
+		margin: 0;
+		padding: 0;
+		color: #fff;
+	}
+	 button {
+		position: absolute;
+		top: 110%;
+		right: 0;
+		background-color: transparent;
+		border: none;
+	  color: #fff;
+	  font-size: 20px;
+	  cursor: pointer;
+	  padding: 0;
+	 }
+
+	
+</style>	       
+<main>
+	
+<div class="slide-container">
+	<div class="slides">
+      <div class="slide active" id="slide-1">SLIDE 01</div>
+      <div class="slide" id="slide-2">SLIDE 02</div>
+      <div class="slide" id="slide-3">SLIDE 03</div>
+      <div class="slide" id="slide-4">SLIDE 04</div>
+	</div>
+	
+	<ul id="slide-controller">
+      <li class="click active" data-link="slide-1">1<div></div></li>
+      <li class="click" data-link="slide-2"><div></div>2<div></div></li>
+      <li class="click" data-link="slide-3"><div></div>3<div></div></li>
+      <li class="click" data-link="slide-4"><div></div>4</li>
+	</ul>
+	
+	<button id="arrow-button">
+	<svg width="50px" height="40px" viewBox="0 0 80 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<g id="arrow-right" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+					<g id="Right" transform="translate(0.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+							<g id="Icon" transform="translate(40.000000, 15.000000) rotate(-90.000000) translate(-40.000000, -15.000000) translate(25.000000, -25.000000)">
+									<g id="Mask" transform="translate(15.000000, 40.000000) rotate(90.000000) translate(-15.000000, -40.000000) translate(-25.000000, 25.000000)">
+											<polygon id="path-1" points="78.1098936 14.5241072 65.1507576 1.5649712 65.8578644 0.8578644 79.2928932 14.2928932 80 15 65.8578644 29.1421356 65.1507576 28.4350288 78.0616793 15.5241072 0 15.5241072 0 14.5241072"></polygon>
+									</g>
+							</g>
+					</g>
+			</g>
+	</svg>
+	
+	</button>
+</div>	
+	
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+					
+<script>
+	
+
+
+//Set slide time interval:
+const slidetime = 4000;
+//https://stackoverflow.com/questions/8126466/how-do-i-reset-the-setinterval-timer  
+function Timer(fn, t) {
+    var timerObj = setInterval(fn, t);
+    this.stop = function() {
+        if (timerObj) {
+            clearInterval(timerObj);
+            timerObj = null;
+        }
+        return this;
+    }
+    // start timer using current settings (if it's not already running)
+    this.start = function() {
+        if (!timerObj) {
+            this.stop();
+            timerObj = setInterval(fn, t);
+        }
+        return this;
+    }
+    // start with new interval, stop current interval
+    this.reset = function(newT) {
+        t = newT;
+        return this.stop().start();
+    }
+}
+const timer = new Timer(function() {slideController();}, slidetime);
+  
+/*
+Extra functionality:
+
+Stop the timer:
+timer.stop();
+
+Start the timer: 
+timer.start(); 
+
+*/
+  
+  
+//ARROW CONTROLER
+function slideController(){
+  const active = document.querySelectorAll('li.active')[0],
+        activeslide = document.querySelectorAll('div.slide.active')[0],
+        number = active.dataset.link.split("-",2)[1],
+        length = document.querySelectorAll("#slide-controller li").length;
+
+  active.className = active.className.replace('active', '');
+  activeslide.className = activeslide.className.replace('active', '');
+
+  if( number < length){
+      active.nextElementSibling.className += ' active';
+      activeslide.nextElementSibling.className += ' active';
+  } else {
+      document.querySelectorAll("#slide-controller li")[0].className += ' active';
+      document.getElementById("slide-1").className += ' active';
+  }
+  timer.reset(slidetime);
+}
+const button = document.getElementById("arrow-button");  
+button.addEventListener('click', slideController);
+
+//NUMBER CONTROLERS  
+  clicks = document.getElementById("slide-controller");
+  clicks.addEventListener('click', (e) =>{
+      const el = e.target,
+          active = document.querySelectorAll('.active');
+      for (each of active) {
+           each.className = each.className.replace('active', '');
+      }
+      el.className += ' active';
+      document.getElementById(el.dataset.link).className += ' active';
+
+      timer.reset(slidetime);
+  });	
+
+</script>
+			
+			
+        
+</body>
+</html>
+<!--
+
+    [[[[[[[[[[[[[[[      ]]]]]]]]]]]]]]]
+    [::::::::::::::      ::::::::::::::]
+    [::::::::::::::      ::::::::::::::]
+    [::::::[[[[[[[:      :]]]]]]]::::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[     CODE THE WEB     ]:::::]
+    [:::::[  http://brackets.io  ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [:::::[                      ]:::::]
+    [::::::[[[[[[[:      :]]]]]]]::::::]
+    [::::::::::::::      ::::::::::::::]
+    [::::::::::::::      ::::::::::::::]
+    [[[[[[[[[[[[[[[      ]]]]]]]]]]]]]]]
+
+-->
